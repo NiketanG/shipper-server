@@ -8,6 +8,7 @@ dotenv.config();
 import typeORMConfig from "./typeorm.config";
 import { Ship } from "./Entities/Vessel";
 import MainRouter from "./routes";
+import { ShipSocketData } from "./utils/types";
 
 const PORT = process.env.PORT || 3000;
 const main = async () => {
@@ -35,30 +36,33 @@ const main = async () => {
 	app.use("/", MainRouter);
 	io.on("connection", (socket: Socket) => {
 		console.log("User connected");
-
-		socket.on("moved", async (data) => {
+		socket.on("updated", async (data: ShipSocketData) => {
 			console.log("Data", data);
-			io.emit("updated", {
+			io.emit("moved", {
 				...data,
 				lastUpdated: new Date(),
 			});
-			const ship = await Ship.findOne(data.email);
-			if (ship) {
-				ship.latitude = data.coords.latitude;
-				ship.longitude = data.coords.longitude;
-				ship.heading = data.coords.heading;
-				ship.speed = data.coords.speed;
+			try {
+				const ship = await Ship.findOne(data.email);
+				if (ship) {
+					ship.latitude = data.coords.latitude;
+					ship.longitude = data.coords.longitude;
+					ship.heading = data.coords.heading;
+					ship.speed = data.coords.speed;
 
-				await ship.save();
-			} else {
-				await Ship.create({
-					email: data.email,
-					name: data.name,
-					latitude: data.coords.latitude,
-					longitude: data.coords.longitude,
-					heading: data.coords.heading,
-					speed: data.coords.speed,
-				}).save();
+					await ship.save();
+				} else {
+					await Ship.create({
+						email: data.email,
+						name: data.name,
+						latitude: data.coords.latitude,
+						longitude: data.coords.longitude,
+						heading: data.coords.heading,
+						speed: data.coords.speed,
+					}).save();
+				}
+			} catch (err) {
+				console.error(err);
 			}
 		});
 	});
