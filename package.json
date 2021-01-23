@@ -12,7 +12,9 @@
 		"start": "node dist/index.js",
 		"type-check": "tsc --pretty --noEmit",
 		"lint": "eslint . --ext ts --ext tsx --ext js",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
+		"init-database": "yarn run typeorm migration:run -f src/typeorm.config.ts"
 	},
 	"keywords": [],
 	"author": "NiketanG",
