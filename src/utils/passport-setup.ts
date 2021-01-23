@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy } from "passport-google-oauth20";
 import { Ship } from "../Entities/Vessel";
+import { __prod__ } from "./constants";
 
 passport.serializeUser((user: any, done: any) => {
 	done(null, user);
@@ -17,9 +18,14 @@ passport.use(
 		{
 			clientID: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-			callbackURL: `http://${process.env.HOST || "localhost"}:${
-				process.env.PORT || "3000"
-			}/${process.env.GOOGLE_CALLBACK_URL || "login/google/callback"}`,
+			callbackURL: __prod__
+				? `${process.env.API_HOST}/${process.env.GOOGLE_CALLBACK_URL}`
+				: `http://${process.env.HOST || "localhost"}:${
+						process.env.PORT || "3000"
+				  }/${
+						process.env.GOOGLE_CALLBACK_URL ||
+						"login/google/callback"
+				  }`,
 			// passReqToCallback: true,
 		},
 
