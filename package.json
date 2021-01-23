@@ -9,7 +9,7 @@
 		"nodemon": "nodemon dist/index.js",
 		"watch": "tsc -w",
 		"build": "tsc",
-		"start": "tsc && node dist/index.js",
+		"start": "yarn run tsc && node dist/index.js",
 		"type-check": "tsc --pretty --noEmit",
 		"lint": "eslint . --ext ts --ext tsx --ext js",
 		"format": "prettier --write ."
