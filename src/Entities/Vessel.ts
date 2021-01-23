@@ -1,4 +1,10 @@
-import { BaseEntity, Column, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import {
+	BaseEntity,
+	Column,
+	Entity,
+	PrimaryColumn,
+	UpdateDateColumn,
+} from "typeorm";
 
 @Entity({
 	name: "ships",
