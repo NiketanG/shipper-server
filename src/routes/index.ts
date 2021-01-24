@@ -1,15 +1,22 @@
 import { Router } from "express";
 import { Ship } from "../Entities/Vessel";
-import passport from "passport";
+// import passport from "passport";
 const MainRouter = Router();
 
 MainRouter.get("/", async (_req, res) => {
 	res.status(200).send("Hello World");
 });
 
-MainRouter.get("/api/users/current", (req, res) => {
-	if (req.user) {
-		return res.status(200).json(req.user);
+MainRouter.get("/api/users/current", async (req, res) => {
+	if (req.headers.authorization) {
+		const ship = await Ship.findOne(req.headers.authorization);
+		if (ship) {
+			return res.status(200).json(ship);
+		} else {
+			return res.status(401).json({
+				code: "NOT_LOGGED_IN",
+			});
+		}
 	} else {
 		return res.status(401).json({
 			code: "NOT_LOGGED_IN",
@@ -17,28 +24,56 @@ MainRouter.get("/api/users/current", (req, res) => {
 	}
 });
 
-MainRouter.get(
-	"/login/google",
-	passport.authenticate("google", { scope: ["email", "profile"] })
-);
+// MainRouter.get(
+// 	"/login/google",
+// 	passport.authenticate("google", { scope: ["email", "profile"] })
+// );
 
-MainRouter.get(
-	"/login/google/callback",
-	passport.authenticate("google", { failureRedirect: "/login/google" }),
-	function (_req, res) {
-		// Successful authentication, redirect home.
-		res.redirect(
-			`${process.env.FRONTEND_URL || "http://localhost:3000"}/map`
-		);
+// MainRouter.get(
+// 	"/login/google/callback",
+// 	passport.authenticate("google", { failureRedirect: "/login/google" }),
+// 	function (_req, res) {
+// 		// (req as CustomRequest).session.user = req.user;
+// 		// Successful authentication, redirect home.
+// 		res.redirect(
+// 			`${process.env.FRONTEND_URL || "http://localhost:3000"}/map`
+// 		);
+// 	}
+// );
+
+MainRouter.post("/api/users/new", async (req, res) => {
+	console.log(req.body);
+	if (req.body.email && req.body.name) {
+		const userExists = await Ship.findOne(req.body.email);
+
+		if (userExists) {
+			return res.status(200).json(userExists);
+		} else {
+			const user = await Ship.create({
+				email: req.body.email,
+				name: req.body.name,
+				latitude: req.body.latitude || 17.00919245936354,
+				longitude: req.body.longitude || 73.26783158874858,
+				heading: req.body.heading || 0,
+				speed: req.body.speed || 0,
+			}).save();
+
+			return res.status(200).json(user);
+		}
+	} else {
+		return res.status(400).json({
+			code: "INVALID_REQUEST",
+			message: "Make sure to include all params",
+		});
 	}
-);
+});
 
 MainRouter.get("/ships", async (req, res) => {
 	try {
 		let ships = await Ship.find({});
-		if (req.user) {
+		if (req.headers.authorization) {
 			ships = ships.filter(
-				(ship) => ship.email !== (req.user as Ship)?.email
+				(ship) => ship.email !== req.headers.authorization
 			);
 		}
 		return res.status(200).json(ships);
