@@ -11,16 +11,16 @@ Developed for **ASEAN-India Hackathon** 2021 - PS7.
 ### Local Development
 
 ##### Prerequisites
-[Postgresql](https://www.postgresql.org/) Installed and Configured on the system
-[Node.js](https://nodejs.org/) Installed
+ - [Postgresql](https://www.postgresql.org/) Installed and Configured on the system
+ - [Node.js](https://nodejs.org/) Installed
 
 ##### Configure Environment Variables
 Make sure you have set the following environment variables. You can also use a **.env** file. An .env.example file is provided for the format
-
+```
 DATABASE_URL=Url of the Postgresql Database For Eg. `postgresql://postgres:postgres@localhost:5432/shipper`
 PORT=Port on which you want the server to run For Eg. `4000`
 FRONTEND_URL=URL on which the Frontend ([Shipper-Web](https://github.com/NiketanG/shipper-web)) is running Gor Eg. `http://localhost:3000`
-
+```
 ##### Install Dependencies
 ```
 yarn install
