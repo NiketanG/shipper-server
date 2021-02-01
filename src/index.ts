@@ -8,7 +8,11 @@ dotenv.config();
 import typeORMConfig from "./typeorm.config";
 import { Ship } from "./Entities/Vessel";
 import MainRouter from "./routes";
-import { ShipSocketData, AIS_Signal_Data } from "./utils/types";
+import {
+	ShipSocketData,
+	AIS_Signal_Data,
+	Pirate_Signal_Data,
+} from "./utils/types";
 // import passport from "passport";
 // import "./utils/passport-setup";
 // import session from "express-session";
@@ -137,6 +141,10 @@ const main = async () => {
 			} catch (err) {
 				console.error(err);
 			}
+		});
+
+		socket.on("NEW_PIRATE", async (data: Pirate_Signal_Data) => {
+			socket.broadcast.emit("NEW_PIRATE_SIGNAL", data);
 		});
 	});
 

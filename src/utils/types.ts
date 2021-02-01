@@ -20,3 +20,8 @@ export type AIS_Signal_Data = {
 		speed: 0;
 	};
 };
+
+export type Pirate_Signal_Data = {
+	latitude: number;
+	longitude: number;
+};
