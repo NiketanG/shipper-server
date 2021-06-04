@@ -13,17 +13,13 @@ import {
 	AIS_Signal_Data,
 	Pirate_Signal_Data,
 } from "./utils/types";
-// import passport from "passport";
-// import "./utils/passport-setup";
-// import session from "express-session";
-// import { TypeormStore } from "connect-typeorm";
-// import { Session } from "./Entities/Session";
+
 import cors from "cors";
+import { __prod__ } from "./utils/constants";
 
 const PORT = process.env.PORT || 3000;
 const main = async () => {
 	// Wait for Database to be Online
-
 	// Max No. of retries for connecting to database
 	let db_retries = 5;
 
@@ -41,7 +37,9 @@ const main = async () => {
 
 	const app = express();
 
-	const corsDomains = [process.env.FRONTEND_URL!, "http://localhost:3000"];
+	const corsDomains = __prod__
+		? process.env.FRONTEND_URL
+		: ["http://localhost:3000", "http://192.168.1.7:3000"];
 
 	app.use(
 		cors({
@@ -55,7 +53,7 @@ const main = async () => {
 	const server = require("http").Server(app);
 	const io = require("socket.io")(server, {
 		cors: {
-			origin: process.env.FRONTEND_URL || "http://localhost:3000",
+			origin: corsDomains,
 			methods: ["GET", "POST"],
 			credentials: true,
 		},
@@ -92,7 +90,6 @@ const main = async () => {
 	// );
 
 	io.on("connection", (socket: Socket) => {
-		console.log("User connected");
 		socket.on("updated", async (data: ShipSocketData) => {
 			socket.broadcast.emit("moved", {
 				...data,
