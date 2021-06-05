@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+    shipper_db:
+        container_name: shipper_db
+        image: postgres
+        environment:
+            POSTGRES_DB: shipper
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        ports:
+            - "5432:5432"
+
+    shipper_server:
+        container_name: shipper_server
+        command: bash -c "yarn init-database && yarn start"
+        depends_on:
+            - shipper_db
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            DATABASE_URL: postgresql://postgres:postgres@shipper_db:5432/shipper
+            PORT: 4000
+            FRONTEND_URL: https://shipper-web.netlify.app/
+            NODE_ENV: production
+        ports:
+            - 4000:4000

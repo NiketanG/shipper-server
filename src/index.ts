@@ -39,7 +39,7 @@ const main = async () => {
 
 	const corsDomains = __prod__
 		? process.env.FRONTEND_URL
-		: ["http://localhost:3000", "http://192.168.1.7:3000"];
+		: ["http://localhost:3000"];
 
 	app.use(
 		cors({
@@ -59,35 +59,7 @@ const main = async () => {
 		},
 	});
 
-	// const sessionMiddleware = session({
-	// 	name: "qid",
-	// 	store: new TypeormStore({
-	// 		cleanupLimit: 2,
-	// 		limitSubquery: false,
-	// 		ttl: 86400,
-	// 	}).connect(getRepository(Session)),
-	// 	resave: false,
-	// 	saveUninitialized: false,
-	// 	cookie: {
-	// 		maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 Years,
-	// 		httpOnly: true,
-	// 		secure: false, //__prod__, // if true, Cookie only works in https,
-	// 		sameSite: "lax", // CSRF Protection,
-	// 	},
-	// 	secret:
-	// 		process.env.SECRET_KEY ||
-	// 		"absenfsr,jsaerbdkjcvsdf6w35wA^&IATEidavfjkvr",
-	// });
-	// app.use(sessionMiddleware);
-
-	// app.use(passport.initialize());
-	// app.use(passport.session());
-
 	app.use("/", MainRouter);
-
-	// io.use((socket: Socket, next: any) =>
-	// 	sessionMiddleware(socket.request as any, {} as any, next)
-	// );
 
 	io.on("connection", (socket: Socket) => {
 		socket.on("updated", async (data: ShipSocketData) => {

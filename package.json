@@ -8,7 +8,7 @@
 		"tsnode": "ts-node src/index.ts",
 		"nodemon": "nodemon dist/index.js",
 		"watch": "tsc -w",
-		"postinstall": "tsc",
+		"build": "tsc",
 		"start": "node dist/index.js",
 		"type-check": "tsc --pretty --noEmit",
 		"lint": "eslint . --ext ts --ext tsx --ext js",
