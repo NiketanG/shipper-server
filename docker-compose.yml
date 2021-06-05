@@ -22,7 +22,7 @@ services:
         environment:
             DATABASE_URL: postgresql://postgres:postgres@shipper_db:5432/shipper
             PORT: 4000
-            FRONTEND_URL: https://shipper-web.netlify.app/
+            FRONTEND_URL: http://shipper-web.netlify.app/
             NODE_ENV: production
         ports:
             - 4000:4000
