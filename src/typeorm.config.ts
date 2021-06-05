@@ -10,6 +10,9 @@ export default {
 	synchronize: !__prod__,
 	url: process.env.DATABASE_URL,
 	logging: false,
-	ssl: __prod__ ? { rejectUnauthorized: false } : false,
+	ssl:
+		process.env.DB_ENABLE_SSL === "true"
+			? { rejectUnauthorized: false }
+			: false,
 	migrations: [path.join(__dirname, "./migration/*")],
 } as Parameters<typeof TypeORM.createConnection>[0];
