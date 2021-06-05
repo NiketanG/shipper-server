@@ -1,9 +1,12 @@
 import { Router } from "express";
+import { __prod__ } from "../utils/constants";
 import { Ship } from "../Entities/Vessel";
-// import passport from "passport";
 const MainRouter = Router();
 
 MainRouter.get("/", async (_req, res) => {
+	if (!__prod__) {
+		console.log("Ping");
+	}
 	res.status(200).send("Hello World");
 });
 
@@ -24,25 +27,7 @@ MainRouter.get("/api/users/current", async (req, res) => {
 	}
 });
 
-// MainRouter.get(
-// 	"/login/google",
-// 	passport.authenticate("google", { scope: ["email", "profile"] })
-// );
-
-// MainRouter.get(
-// 	"/login/google/callback",
-// 	passport.authenticate("google", { failureRedirect: "/login/google" }),
-// 	function (_req, res) {
-// 		// (req as CustomRequest).session.user = req.user;
-// 		// Successful authentication, redirect home.
-// 		res.redirect(
-// 			`${process.env.FRONTEND_URL || "http://localhost:3000"}/map`
-// 		);
-// 	}
-// );
-
 MainRouter.post("/api/users/new", async (req, res) => {
-	console.log(req.body);
 	if (req.body.email && req.body.name) {
 		const userExists = await Ship.findOne(req.body.email);
 
@@ -88,15 +73,15 @@ MainRouter.get("/ships", async (req, res) => {
 
 MainRouter.post("/ship", (req, res) => {
 	if (
-		req.body.email &&
-		req.body.name &&
-		req.body.coords?.latitude &&
-		req.body.coords?.longitude &&
-		req.body.coords?.heading &&
-		req.body.coords?.speed
+		!(
+			req.body.email &&
+			req.body.name &&
+			req.body.coords?.latitude &&
+			req.body.coords?.longitude &&
+			req.body.coords?.heading &&
+			req.body.coords?.speed
+		)
 	) {
-		console.log(req.body);
-	} else {
 		res.status(400).json({
 			code: "INVALID_REQUEST",
 			message: "Make sure to include all params",
