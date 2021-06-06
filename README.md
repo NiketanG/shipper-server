@@ -58,7 +58,7 @@ npm run dev
 
 This will start a develoment server for the frontend on [http://localhost:4000](http://localhost:4000)
 
----
+
 
 ### Run Migrations
 
@@ -68,7 +68,7 @@ Required to run only once.
 ```bash
 yarn init-database
 ```
-
+---
 ## Deployment
 
 ### Create a production build
@@ -104,3 +104,11 @@ docker-compose up --build
 The server uses [Socket.io](https://socket.io/) to provide Bi-Directional Communication to all clients connected as the location of ships changes. The Updated data is then stored in the database.
 
 Build and Start the Frontend Server ([Shipper-Web](https://github.com/NiketanG/shipper-web)), make sure the API_URL is properly configured and follow the instructions in [Getting Started](https://github.com/NiketanG/shipper-web#getting-started).
+
+
+---
+
+## LICENSE
+[Eclipse Public License (EPL)](https://www.eclipse.org/legal/epl-2.0/)
+
+You are free to modify the code. Redistributions are not allowed without prior request from the original author. You are obligated to include the full **license** and the **copyrights**.
